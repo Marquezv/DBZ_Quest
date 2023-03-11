@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import QUIT
 from collections import namedtuple
 from Block import Block
-from map import new_map
+from map import new_map, open_map
 from controllers import change_color, change_color, pressed_mouse_left
 
 pygame.init()
@@ -27,6 +27,8 @@ color_list = [
      
 
 new_map(sc, block_list, color_list)
+# open_map(sc, block_list, color_list)
+
 
 def main():
     select_color = None
