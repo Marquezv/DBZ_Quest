@@ -1,14 +1,22 @@
 from pygame import draw
 from random import randint
-import json
 
 class Block():
-    def __init__(self, block, color_list, sc):
-        self.num_color = rand_color(color_list)
+    color = ""
+    def __init__(self, block, sc):
         self.sc = sc
-        self.rect = draw.rect(self.sc, self.num_color, block)
+        self.block_obj = block
+        self.color = [0, 0, 0]
 
-def rand_color(colors: list):
-    return colors[randint(0, 2)].cor         
+    def select_color(self, color):
+        self.color = color
+        self.rect = draw.rect(self.sc, self.color, self.block_obj)
 
-        
+
+
+    def rand_color(self, colors):
+        self.color = colors[randint(0, 2)].cor
+        self.rect = draw.rect(self.sc, self.color, self.block_obj)
+        return self.color
+
+

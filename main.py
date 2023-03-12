@@ -15,8 +15,8 @@ clock = pygame.time.Clock()
 block_list = [pygame.Rect(21 * i, 21 * j, 20, 20) for i in range(42) for j in range(42)]
 
 Elementos = namedtuple('Elementos', ['nome', 'cor', 'valor'])
-agua = Elementos('Agua', [62, 129, 237], 10)
-grama = Elementos('Grama', [62, 237, 106], 1)
+agua = Elementos('Agua', [75, 77, 255], 10)
+grama = Elementos('Grama', [129, 209, 75, 82], 1)
 montanha = Elementos('Montanha', [237, 173, 62], 60)
 
 color_list = [
@@ -27,7 +27,7 @@ color_list = [
      
 
 new_map(sc, block_list, color_list)
-# open_map(sc, block_list, color_list)
+# open_map(sc, 'map.csv')
 
 
 def main():
