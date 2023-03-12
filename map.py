@@ -25,9 +25,12 @@ def new_map(sc, block_list, color_list):
     
 
 def open_map(sc, path_file):
-    path = path_file
-    file = open(path, newline='')
-    reader = csv.reader(file)
+    try:
+        path = f'./data/map/{path_file}'
+        file = open(path, newline='')
+        reader = csv.reader(file)
+    except FileExistsError:
+        print(f"[ERRO] Arquivo '{path_file}' nao encontrado em data/map")
 
     header = next(reader)
     data = []
@@ -44,9 +47,10 @@ def open_map(sc, path_file):
         Block(block, sc).select_color(color)
         
 
-def save_map(sc, block_list, path_file):   
+def save_map(sc, block_list, path_file):
+    path = f'./data/map/{path_file}'
     fied_names = ['x', 'y', 'width', 'height', 'color']
-    with open('map.csv', 'w', newline='') as fp:
+    with open(path, 'w', newline='') as fp:
         writer = csv.DictWriter(fp, fieldnames=fied_names)
         writer.writeheader()
         for block in block_list:
