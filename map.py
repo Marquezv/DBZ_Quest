@@ -11,24 +11,18 @@ def new_map(sc, block_list, color_list):
         writer = csv.DictWriter(fp, fieldnames=fied_names)
         writer.writeheader()
         for block in block_list:
-            bk = Block(block,sc).rand_color(color_list)
-            print(bk)
+            bk_color = Block(block,sc).rand_color(color_list)
             block_data = {
                     'x': block.x,
                     'y': block.y,
                     'width': block.width,
                     'height': block.height,
-                    'color': bk
+                    'color': bk_color
                 }
             
             writer.writerow(block_data)
 
     
-# def new_map(sc, block_list, color_list):
-#     f = open("data/map/01.txt", "w")
-#     for block in block_list:
-#             bk = Block(block, color_list, sc)
-#             f.write(f"\nx={block.x}, y={block.y}, width={block.width}, height={block.height}, color={bk.num_color}")
 
 def open_map(sc, path_file):
     path = path_file
@@ -48,6 +42,24 @@ def open_map(sc, path_file):
 
         block = pygame.Rect(x, y, width, height)
         Block(block, sc).select_color(color)
+        
+
+def save_map(sc, block_list, path_file):   
+    fied_names = ['x', 'y', 'width', 'height', 'color']
+    with open('map.csv', 'w', newline='') as fp:
+        writer = csv.DictWriter(fp, fieldnames=fied_names)
+        writer.writeheader()
+        for block in block_list:
+            color = sc.get_at((block.x, block.y))
+            block_data = {
+                    'x': block.x,
+                    'y': block.y,
+                    'width': block.width,
+                    'height': block.height,
+                    'color': color
+                }
+            
+            writer.writerow(block_data)
             
 
     
