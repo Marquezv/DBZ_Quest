@@ -55,7 +55,8 @@ def main():
     opt = int(input("[0] Criar novo mapa \n[1] Utlizar um mapa \n :"))
     try:
         if opt == 0:
-            new_map(sc, block_list, color_list)
+            path_file = input("Insira o nome do novo mapa :")
+            new_map(sc, path_file, block_list, color_list)
         elif opt == 1:
             print("!O ARQUIVO DEVE ESTAR EM data/map")
             path_file = input("Insira o nome do arquivo :")

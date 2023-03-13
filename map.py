@@ -5,9 +5,10 @@ from Block import Block
 
 
 
-def new_map(sc, block_list, color_list):
+def new_map(sc, path_file, block_list, color_list):
+    path = f'./data/map/{path_file}.csv'
     fied_names = ['x', 'y', 'width', 'height', 'color']
-    with open('map.csv', 'w', newline='') as fp:
+    with open(path, 'w', newline='') as fp:
         writer = csv.DictWriter(fp, fieldnames=fied_names)
         writer.writeheader()
         for block in block_list:
@@ -64,7 +65,7 @@ def save_map(sc, block_list, path_file):
                 }
             
             writer.writerow(block_data)
-            
+        print('SAVED')
 
     
 
