@@ -66,10 +66,29 @@ def main():
     except ValueError:
         print("[ERRO] Numero nao encontrado")
     run()
+
+def history(block, ht):
+
+    color = sc.get_at((block.x, block.y))
+    block_data = {
+            'x': block.x,
+            'y': block.y,
+            'width': block.width,
+            'height': block.height,
+            'color': color
+        }
+    if block_data.get('color') != (255, 0, 0, 255):
+        ht.append(block_data)
+       
+    if len(ht) > 2 :
+        ht.pop(0)
+    ht_color = ht[0].get('color')
+    rect = pygame.Rect(ht[0].get('x'), ht[0].get('y'), ht[0].get('height'), ht[0].get('width'))
+    pygame.draw.rect(sc, ht_color, rect)
     
 
-class Player(object):
-
+class Player():
+    pass_color = []
     def __init__(self, sc):
         self.sc = sc
         self.color = [255, 0, 0]
@@ -77,17 +96,9 @@ class Player(object):
         self.y = 399 
         self.width = 20
         self.height = 20
-        self.radar_x = self.x - 63
-        self.radar_y = self.y - 63
-        self.radar_width = 147
-        self.radar_height = 147
-        self.radar_color = [100, 0, 0, 100]
-        self.radar_border = 3
-        self.image = self.color
-        self.rect = pygame.Rect(self.x, self.y, self.height, self.width)
-        self.radar_rect = pygame.Rect(self.radar_x, self.radar_y, self.radar_height, self.radar_width)
     
-    def handle_keys(self, key):
+    def handle_keys(self, key, ht):
+        
         if key[pygame.K_a]:
             self.x -= 21
         if key[pygame.K_d]:
@@ -96,9 +107,11 @@ class Player(object):
             self.y -= 21
         if key[pygame.K_s]:
             self.y += 21
-        return pygame.Rect(self.x, self.y, self.height, self.width)
-    
-        
+
+        self.rect = pygame.Rect(self.x, self.y, self.height, self.width)
+        history(self.rect, ht)
+        pygame.draw.rect(sc, self.color, self.rect)            
+
 
     
 
@@ -107,12 +120,11 @@ player = Player(sc)
 def run():
     select_color = None
     running = True
+    ht = []
     while running:
-        for event in pygame.event.get():
+        for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
             keys = pygame.key.get_pressed()
-            player.handle_keys(keys)
-            pygame.draw.rect(sc, [255, 0, 0], player)
             if event.type == QUIT:
                 running = False
                 pygame.quit()
@@ -129,7 +141,8 @@ def run():
                     select_color = color_list[3].cor
                 if keys[pygame.K_LCTRL] and keys[pygame.K_SPACE]:
                     save_map(sc, block_list, 'map.csv')
-        
+                player.handle_keys(keys, ht)
+
         pygame.display.update()
         clock.tick(60)
     
