@@ -1,9 +1,9 @@
 import pygame
 from pygame.locals import QUIT
 from collections import namedtuple
-from map import new_map, open_map, save_map
-from controllers import pressed_mouse_left
-
+from map import new_map, open_map
+from controllers import pressed_mouse_left, change_color, save
+from Player import Player
 
 pygame.init()
 WIDTH, HEIGHT = 880, 880
@@ -11,7 +11,6 @@ PIXEL = 42
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
-
 block_list = [pygame.Rect(21 * i, 21 * j, 20, 20) for i in range(42) for j in range(42)]
 
 Elementos = namedtuple('Elementos', ['nome', 'cor', 'valor'])
@@ -63,64 +62,21 @@ def main():
             print("!O ARQUIVO DEVE ESTAR EM data/map")
             path_file = input("Insira o nome do arquivo :")
             open_map(sc, path_file)
+            playing = True
     except ValueError:
         print("[ERRO] Numero nao encontrado")
-    run()
-
-def history(block, ht):
-
-    color = sc.get_at((block.x, block.y))
-    block_data = {
-            'x': block.x,
-            'y': block.y,
-            'width': block.width,
-            'height': block.height,
-            'color': color
-        }
-    if block_data.get('color') != (255, 0, 0, 255):
-        ht.append(block_data)
-       
-    if len(ht) > 2 :
-        ht.pop(0)
-    ht_color = ht[0].get('color')
-    rect = pygame.Rect(ht[0].get('x'), ht[0].get('y'), ht[0].get('height'), ht[0].get('width'))
-    pygame.draw.rect(sc, ht_color, rect)
-    
-
-class Player():
-    pass_color = []
-    def __init__(self, sc):
-        self.sc = sc
-        self.color = [255, 0, 0]
-        self.x = 399 
-        self.y = 399 
-        self.width = 20
-        self.height = 20
-    
-    def handle_keys(self, key, ht):
-        
-        if key[pygame.K_a]:
-            self.x -= 21
-        if key[pygame.K_d]:
-            self.x += 21
-        if key[pygame.K_w]:
-            self.y -= 21
-        if key[pygame.K_s]:
-            self.y += 21
-
-        self.rect = pygame.Rect(self.x, self.y, self.height, self.width)
-        history(self.rect, ht)
-        pygame.draw.rect(sc, self.color, self.rect)            
-
-
-    
+    playing = False
+    run(playing)
+            
+  
 
 player = Player(sc)
 
-def run():
+def run(playing: bool):
     select_color = None
     running = True
     ht = []
+    
     while running:
         for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
@@ -128,20 +84,17 @@ def run():
             if event.type == QUIT:
                 running = False
                 pygame.quit()
+            # if playing:
+            player.handle_keys(keys, ht)
+            if keys[pygame.K_ESCAPE]:
+                playing = False
             elif left and select_color != None:
                 pressed_mouse_left(sc, block_list, select_color)
-            if event.type == pygame.KEYDOWN:
-                if keys[pygame.K_LCTRL] and keys[pygame.K_1]:
-                    select_color = color_list[0].cor
-                if keys[pygame.K_LCTRL] and keys[pygame.K_2]:
-                    select_color = color_list[1].cor
-                if keys[pygame.K_LCTRL] and keys[pygame.K_3]:
-                    select_color = color_list[2].cor
-                if keys[pygame.K_LCTRL] and keys[pygame.K_4]:
-                    select_color = color_list[3].cor
-                if keys[pygame.K_LCTRL] and keys[pygame.K_SPACE]:
-                    save_map(sc, block_list, 'map.csv')
-                player.handle_keys(keys, ht)
+            elif event.type == pygame.KEYDOWN:
+                select_color = change_color(keys, color_list, select_color)
+                playing = save(keys, sc, block_list)
+
+            
 
         pygame.display.update()
         clock.tick(60)

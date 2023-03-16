@@ -46,7 +46,7 @@ def open_map(sc, path_file):
 
         block = pygame.Rect(x, y, width, height)
         Block(block, sc).select_color(color)
-        
+
 
 def save_map(sc, block_list, path_file):
     path = f'./data/map/{path_file}'
@@ -68,4 +68,17 @@ def save_map(sc, block_list, path_file):
         print('SAVED')
 
     
-
+def filter(sc, block_list):
+    block_selected = []
+    for block in block_list:
+        color = sc.get_at((block.x, block.y))
+        block_data = {
+                'x': block.x,
+                'y': block.y,
+                'width': block.width,
+                'height': block.height,
+                'color': color
+            }
+        block_selected.append(block_data)
+    
+    return block_selected
