@@ -1,5 +1,6 @@
 import pygame
 
+
 class Player():
     pass_color = []
     def __init__(self, sc):
@@ -9,7 +10,7 @@ class Player():
         self.y = 399 
         self.width = 20
         self.height = 20
-
+    
     def handle_keys(self, key, ht):
         
         if key[pygame.K_a]:
@@ -20,17 +21,23 @@ class Player():
             self.y -= 21
         if key[pygame.K_s]:
             self.y += 21
-
+        
         self.rect = pygame.Rect(self.x, self.y, self.height, self.width)
-        history(self.rect, ht, self.sc, self.color)
-        pygame.draw.rect(self.sc, self.color, self.rect)
-#         radar(self.rect, self.sc)
+        history(self.sc, self.rect, ht)
+        pygame.draw.rect(self.sc, self.color, self.rect) 
 
+        if key[pygame.K_LCTRL] and key[pygame.K_s]:
+            clean(self.sc, ht[1])
+          
+           
 
-# def radar(player, sc):
-#     pygame.draw.rect(sc, [255, 0, 0], [399, 399, 42, 42], 1)
-    
-def history(block, ht, sc, player_color):
+def clean(sc, block):
+    ht_color = block.get('color')
+    rect = pygame.Rect(block.get('x'), block.get('y'), block.get('height'), block.get('width'))
+    print(rect)
+    pygame.draw.rect(sc, ht_color, rect)
+
+def history(sc, block, ht):
 
     color = sc.get_at((block.x, block.y))
     block_data = {
@@ -40,7 +47,7 @@ def history(block, ht, sc, player_color):
             'height': block.height,
             'color': color
         }
-    if block_data.get('color') != player_color:
+    if block_data.get('color') != (255, 0, 0, 255):
         ht.append(block_data)
        
     if len(ht) > 2 :
@@ -48,3 +55,4 @@ def history(block, ht, sc, player_color):
     ht_color = ht[0].get('color')
     rect = pygame.Rect(ht[0].get('x'), ht[0].get('y'), ht[0].get('height'), ht[0].get('width'))
     pygame.draw.rect(sc, ht_color, rect)
+    

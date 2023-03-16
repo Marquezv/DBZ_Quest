@@ -62,21 +62,17 @@ def main():
             print("!O ARQUIVO DEVE ESTAR EM data/map")
             path_file = input("Insira o nome do arquivo :")
             open_map(sc, path_file)
-            playing = True
     except ValueError:
         print("[ERRO] Numero nao encontrado")
-    playing = False
-    run(playing)
+    run()
             
-  
 
 player = Player(sc)
 
-def run(playing: bool):
+def run():
     select_color = None
     running = True
     ht = []
-    
     while running:
         for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
@@ -84,20 +80,19 @@ def run(playing: bool):
             if event.type == QUIT:
                 running = False
                 pygame.quit()
-            # if playing:
-            player.handle_keys(keys, ht)
-            if keys[pygame.K_ESCAPE]:
-                playing = False
-            elif left and select_color != None:
-                pressed_mouse_left(sc, block_list, select_color)
+
             elif event.type == pygame.KEYDOWN:
                 select_color = change_color(keys, color_list, select_color)
-                playing = save(keys, sc, block_list)
+                player.handle_keys(keys, ht)
+                save(keys, sc, block_list)
 
-            
+            elif left and select_color != None:
+                pressed_mouse_left(sc, block_list, select_color)
+           
 
         pygame.display.update()
         clock.tick(60)
+    
     
 if __name__=="__main__":
     main()
