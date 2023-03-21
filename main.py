@@ -11,7 +11,7 @@ PIXEL = 42
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
-block_list = [pygame.Rect(21 * i, 21 * j, 20, 20) for i in range(42) for j in range(42)]
+block_list = [pygame.Rect(21 * i, 21 * j, 20, 20) for i in range(PIXEL) for j in range(PIXEL)]
 
 Elementos = namedtuple('Elementos', ['nome', 'cor', 'valor'])
 agua = Elementos('Agua', [73, 109, 250, 98], 10)
@@ -73,6 +73,7 @@ def run():
     select_color = None
     running = True
     ht = []
+    ht_rd = []
     while running:
         for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
@@ -83,7 +84,7 @@ def run():
 
             elif event.type == pygame.KEYDOWN:
                 select_color = change_color(keys, color_list, select_color)
-                player.handle_keys(keys, ht)
+                player.handle_keys(keys, ht, ht_rd)
                 save(keys, sc, block_list)
 
             elif left and select_color != None:
