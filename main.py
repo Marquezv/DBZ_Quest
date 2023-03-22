@@ -67,12 +67,14 @@ def main():
     run()
             
 
-player = Player(sc)
+
 
 def run():
     select_color = None
     running = True
     ht = []
+    ht_rd = []
+    player = Player(sc)
     while running:
         for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
@@ -83,7 +85,7 @@ def run():
 
             elif event.type == pygame.KEYDOWN:
                 select_color = change_color(keys, color_list, select_color)
-                player.handle_keys(keys, ht)
+                player.handle_keys(keys, ht, ht_rd)
                 save(keys, sc, block_list)
 
             elif left and select_color != None:
