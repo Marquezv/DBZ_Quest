@@ -6,18 +6,22 @@ from controllers import pressed_mouse_left, change_color, save
 from Player import Player
 
 pygame.init()
-WIDTH, HEIGHT = 880, 950
+WIDTH, HEIGHT = 880, 1000
 PIXEL = 42
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
 block_list = [pygame.Rect(21 * i, 21 * j, 20, 20) for i in range(PIXEL) for j in range(PIXEL)]
 
+FONT = pygame.font.SysFont("exo", 40)
+COLOR_FONT = (255, 255, 255)
+
 Elementos = namedtuple('Elementos', ['nome', 'cor', 'valor'])
 agua = Elementos('Agua', [73, 109, 250, 98], 10)
 grama = Elementos('Grama', [143, 219, 70, 86], 1)
 montanha = Elementos('Montanha', [168, 118, 62, 66], 60)
 player = Elementos('Player', [255, 255, 255], 0)
+DRAGON_SPHERE_COLOR = (228, 108, 0, 255)
 
 color_list = [
     agua,
@@ -25,6 +29,10 @@ color_list = [
     montanha,
     player
 ]
+
+
+
+
 
 ascii_art = """ 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣴⣶⠾⠿⠿⠿⠿⠿⠿⠷⣶⣦⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -49,9 +57,7 @@ ascii_art = """
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠛⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 """
 
-
 def main():
-
     print(ascii_art)
     opt = int(input("[0] Criar novo mapa \n[1] Utlizar um mapa \n :"))
     try:
@@ -61,13 +67,18 @@ def main():
         elif opt == 1:
             print("!O ARQUIVO DEVE ESTAR EM data/map")
             path_file = input("Insira o nome do arquivo :")
-            open_map(sc, path_file)
+            open_map(sc, path_file, DRAGON_SPHERE_COLOR)
     except ValueError:
         print("[ERRO] Numero nao encontrado")
     run()
             
 
-
+def draw_text(sc, points, mode):
+    points = FONT.render(f'Points: {points}', 1, COLOR_FONT)
+    mode = FONT.render(f'Mode: {mode}', 1, COLOR_FONT)
+    sc.blit(mode, (10, 885))
+    sc.blit(points, (10, 925))
+    pygame.display.update()
 
 def run():
     pygame.display.set_caption('DBZ_Quest')
@@ -75,9 +86,11 @@ def run():
     running = True
     ht = []
     ht_rd = []
-    player = Player(sc)
+    player = Player(sc, DRAGON_SPHERE_COLOR)
     player.start(ht, ht_rd)
     while running:
+        clock.tick(60)
+        MODE = "GAME"
         for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
             keys = pygame.key.get_pressed()
@@ -88,16 +101,14 @@ def run():
             elif event.type == pygame.KEYDOWN:
                 select_color = change_color(keys, color_list, select_color)
                 player.handle_keys(keys, ht, ht_rd)
+                if keys[pygame.K_LCTRL]:
+                    MODE = "EDIT"
                 save(keys, sc, block_list)
             elif left and select_color != None:
                 pressed_mouse_left(sc, block_list, select_color)
-
-        points = pygame.font.SysFont("arial", 40)
-        WHITE = (255, 255, 255)
-        label = points.render("points = 0", 1, WHITE)
-        sc.blit(label, (10, 910))
+        draw_text(sc, 0, MODE)
         pygame.display.update()
-        clock.tick(60)
+        
     
     
 if __name__=="__main__":

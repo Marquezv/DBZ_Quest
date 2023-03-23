@@ -2,7 +2,7 @@ import csv
 import ast
 import pygame
 from Block import Block
-
+from random import choice
 
 
 def new_map(sc, path_file, block_list, color_list):
@@ -25,7 +25,7 @@ def new_map(sc, path_file, block_list, color_list):
 
     
 
-def open_map(sc, path_file):
+def open_map(sc, path_file, dragon_sphere_color):
     try:
         path = f'./data/map/{path_file}'
         file = open(path, newline='')
@@ -36,17 +36,18 @@ def open_map(sc, path_file):
     header = next(reader)
     data = []
 
-    for row in reader:
+    for row in reader:           
         x = int(row[0])
         y = int(row[1])
         width = int(row[2])
         height = int(row[3])
         color = ast.literal_eval(row[4])
         data.append([x, y, width, height, color])
-
-        block = pygame.Rect(x, y, width, height)
-        Block(block, sc).select_color(color)
-
+    
+    for block in data:
+        rect = pygame.Rect(block[0], block[1], block[2], block[3])
+        Block(rect, sc).select_color(block[4])
+    dragon_sphere(sc, data, dragon_sphere_color)
 
 def save_map(sc, block_list, path_file):
     path = f'./data/map/{path_file}'
@@ -82,3 +83,12 @@ def filter(sc, block_list):
         block_selected.append(block_data)
     
     return block_selected
+
+def dragon_sphere(sc, block_list, dragon_sphere_color):
+    esferas = []
+    for i in range(7):
+        esferas.append(choice(block_list))
+        for ef in esferas:
+            x = ef[0] + 10
+            y = ef[1] + 10
+            pygame.draw.circle(sc, dragon_sphere_color,(x, y), 10) # DRAW CIRCLE

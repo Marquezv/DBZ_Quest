@@ -1,5 +1,5 @@
 from pygame import draw
-from random import randint
+from random import randint, choice
 
 class Block():
 
@@ -19,3 +19,5 @@ class Block():
         self.rect = draw.rect(self.sc, self.color, self.block_obj)
         return self.color
 
+
+    
