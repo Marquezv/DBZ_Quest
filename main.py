@@ -6,7 +6,7 @@ from controllers import pressed_mouse_left, change_color, save
 from Player import Player
 
 pygame.init()
-WIDTH, HEIGHT = 880, 880
+WIDTH, HEIGHT = 880, 950
 PIXEL = 42
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF)
@@ -70,11 +70,13 @@ def main():
 
 
 def run():
+    pygame.display.set_caption('DBZ_Quest')
     select_color = None
     running = True
     ht = []
     ht_rd = []
     player = Player(sc)
+    player.start(ht, ht_rd)
     while running:
         for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
@@ -91,7 +93,10 @@ def run():
             elif left and select_color != None:
                 pressed_mouse_left(sc, block_list, select_color)
            
-
+        points = pygame.font.SysFont("arial", 40)
+        WHITE = (255, 255, 255)
+        label = points.render("points = 0", 1, WHITE)
+        sc.blit(label, (10, 910))
         pygame.display.update()
         clock.tick(60)
     
