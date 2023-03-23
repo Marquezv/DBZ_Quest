@@ -31,11 +31,11 @@ class Player():
             self.x += 21
             self.y += 0
             draw_player(self, ht_rd, ht)
-        if key[pygame.K_w]:
+        if key[pygame.K_w] and not key[pygame.K_a] and not key[pygame.K_d]:
             self.y -= 21
             self.x  += 0
             draw_player(self, ht_rd, ht)
-        if key[pygame.K_s]:
+        if key[pygame.K_s] and not key[pygame.K_a] and not key[pygame.K_d]:
             self.y += 21
             self.x  += 0
             draw_player(self, ht_rd, ht)
@@ -49,7 +49,6 @@ def draw_player(self, ht_rd, ht):
     pygame.draw.rect(self.sc, self.color, self.rect)
    
 def history(sc, block,color, ht):
-    print('ht')
     x = block.x 
     y = block.y 
     block_data = to_block(sc, x, y, block.width, block.height)

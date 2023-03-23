@@ -89,10 +89,9 @@ def run():
                 select_color = change_color(keys, color_list, select_color)
                 player.handle_keys(keys, ht, ht_rd)
                 save(keys, sc, block_list)
-
             elif left and select_color != None:
                 pressed_mouse_left(sc, block_list, select_color)
-           
+
         points = pygame.font.SysFont("arial", 40)
         WHITE = (255, 255, 255)
         label = points.render("points = 0", 1, WHITE)
