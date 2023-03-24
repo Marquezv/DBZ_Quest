@@ -44,10 +44,18 @@ class Player():
         if key[pygame.K_LCTRL] and key[pygame.K_s]:
             clean(self.sc, ht[1])
             history_rd(self, ht_rd)
-            
+
+def player_out_screen(sc, x, y):
+    if x >= sc.get_width() or x <= 0:
+        return True
+    if y >= 880 - 21 or y <= 0:
+        return True
         
 def draw_player(self, ht_rd, ht):
-    radar(self, ht_rd)
+    print(self.x, self.y)
+    if not player_out_screen(self.sc, self.x, self.y):
+        radar(self, ht_rd)
+        
     self.rect = pygame.Rect(self.x, self.y, self.height, self.width)
     history(self.sc, self.rect, self.color, ht)
     collect_sphere(self, ht)
@@ -58,6 +66,7 @@ def collect_sphere(self, ht):
         if block_center(self, block.get('x'), block.get('y')) == self.sphere:
             self.point += 1
             print(self.point)
+
 
 def history(sc, block,color_player, ht):
     x = block.x 
@@ -90,33 +99,47 @@ def radar(self, ht_rd):
             y = self.y - 63
             xmax = self.x - 63 + (21 * 6)
             ymax = self.y - 63 + (21 * 6)
-            block = to_block(self.sc, xi, yi, 20, 20)
-            
-            if block.get('color') != color_player and block_center(self, xi, yi) != self.sphere :
-                ht_rd.append(block)
-                draw_radar(self, color_player, x, y, xi, yi, xmax, ymax)
+            if not radar_out_screen(self, xi, yi):
+                block = to_block(self.sc, xi, yi, 20, 20)
+                
+                if block.get('color') != color_player and block_center(self, xi, yi) != self.sphere :
+                    ht_rd.append(block)
+                    draw_radar(self, color_player, x, y, xi, yi, xmax, ymax)
                 
 
 def draw_radar(self, color_player, x, y, xi, yi, xmax, ymax):
+    border_size = 3
     if xi == x :
-        rect = pygame.Rect(xi, yi, 3, 20)
+        rect = pygame.Rect(xi, yi, border_size, 20)
         pygame.draw.rect(self.sc, color_player, rect)
     if xi == xmax :
-        rect = pygame.Rect(xmax + 17, yi, 3, 20)
+        rect = pygame.Rect(xmax + 17, yi, border_size, 20)
         pygame.draw.rect(self.sc, color_player, rect)
     if yi == y :
-        rect = pygame.Rect(xi, yi, 20, 3)
+        rect = pygame.Rect(xi, yi, 20, border_size)
         pygame.draw.rect(self.sc, color_player, rect)
     if yi == ymax :
-        rect = pygame.Rect(xi, ymax + 17, 20, 3)
+        rect = pygame.Rect(xi, ymax + 17, 20, border_size)
         pygame.draw.rect(self.sc, color_player, rect)
 
 def history_rd(self, ht_rd):
     for block in ht_rd:
-        if block.get('color') != COLOR_PLAYER or block_center(self, block) != self.sphere:
+        if block.get('color') != COLOR_PLAYER or block_center(self, block.get('x'), block.get('y')) != self.sphere:
             rect = pygame.Rect(block.get('x'), block.get('y'), block.get('height'), block.get('width'))
             pygame.draw.rect(self.sc, block.get('color'), rect)
 
+
+def radar_out_screen(self, xi, yi):
+    if xi > self.sc.get_width() or xi <= -21:
+        return True
+    if yi > 880 or yi <= -21:
+        return True
+
+
+def block_center(self, x, y):
+    x += 10
+    y += 10
+    return self.sc.get_at((x, y))
 
 def to_block(sc, x, y, width, height):
     color = sc.get_at((x, y))
@@ -128,8 +151,3 @@ def to_block(sc, x, y, width, height):
             'color': color
         }
     return block_data
-
-def block_center(self, x, y):
-    x += 10
-    y += 10
-    return self.sc.get_at((x, y))
