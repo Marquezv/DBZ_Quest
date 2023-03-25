@@ -4,6 +4,7 @@ from collections import namedtuple
 from map import new_map, open_map
 from controllers import pressed_mouse_left, change_color, save
 from Player import Player
+from Ia import Ia
 
 pygame.init()
 WIDTH, HEIGHT = 880, 1000
@@ -15,19 +16,19 @@ block_list = [pygame.Rect(21 * i, 21 * j, 20, 20) for i in range(PIXEL) for j in
 
 FONT = pygame.font.SysFont("exo", 40)
 COLOR_FONT = (255, 255, 255)
+DRAGON_SPHERE_COLOR = (228, 108, 0, 255)
 
 Elementos = namedtuple('Elementos', ['nome', 'cor', 'valor'])
-agua = Elementos('Agua', [73, 109, 250, 98], 10)
-grama = Elementos('Grama', [143, 219, 70, 86], 1)
-montanha = Elementos('Montanha', [168, 118, 62, 66], 60)
-player = Elementos('Player', [255, 255, 255], 0)
-DRAGON_SPHERE_COLOR = (228, 108, 0, 255)
+agua = Elementos('Agua', [73, 109, 250, 255], 10)
+grama = Elementos('Grama', [143, 219, 70, 255], 1)
+montanha = Elementos('Montanha', [168, 118, 62, 255], 60)
+dragon_sphere = Elementos('Dragon Sphere', DRAGON_SPHERE_COLOR, 100)
 
 color_list = [
     agua,
     grama,
     montanha,
-    player
+    dragon_sphere
 ]
 
 
@@ -88,7 +89,9 @@ def run():
     ht_rd = []
     player = Player(sc, DRAGON_SPHERE_COLOR)
     player.start(ht, ht_rd)
+    ia = Ia(sc, player, color_list)
     while running:
+        ia.update(player)
         clock.tick(60)
         MODE = "GAME"
         for event in pygame.event.get():                                  

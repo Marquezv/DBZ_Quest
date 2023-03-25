@@ -52,7 +52,6 @@ def player_out_screen(sc, x, y):
         return True
         
 def draw_player(self, ht_rd, ht):
-    print(self.x, self.y)
     if not player_out_screen(self.sc, self.x, self.y):
         radar(self, ht_rd)
         
