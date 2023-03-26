@@ -91,7 +91,7 @@ def run():
     player.start(ht, ht_rd)
     ia = Ia(sc, player, color_list)
     while running:
-        ia.update(player)
+        ia.update()
         clock.tick(60)
         MODE = "GAME"
         for event in pygame.event.get():                                  
