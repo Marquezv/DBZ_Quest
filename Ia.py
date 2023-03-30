@@ -1,5 +1,11 @@
-import random
-from Player import Player, block_center, radar_out_screen
+import pygame
+import math
+from queue import PriorityQueue
+
+from map import open_map
+
+
+from Player import Player, block_center
 
 class Ia():
     def __init__(self, sc, player: Player, color_list):
@@ -9,12 +15,11 @@ class Ia():
         self.player = player
         self.color_list = color_list
         self.ht_ia = []
-
+        self.tile = 20
+        scan_map(self)
     def update(self):
         scan_area(self)
-        move_around(self)
-
-        
+       
 def scan_area(self):
     scan_area = []
 
@@ -24,35 +29,25 @@ def scan_area(self):
             xi = self.player.x - 63 + (21 * i)
             yi = self.player.y - 63 + (21 * j)
             try :
-                block = to_block(xi, yi, 20, 20, block_center(self.player, xi, yi))
-
+                block = to_block(self, xi, yi, block_center(self.player, xi, yi))
+                if block.get('valor') == 100:
+                    find_sphere(scan_area)
                 scan_area.append(block)
                 if len(scan_area) > 49 :
                     scan_area = scan_area[:49]
                     scan_area.append(block)
             except Exception:
                 pass
+   
+    return  scan_matrix(process_scan( scan_area))
 
-    scan_matrix(process_scan(self, scan_area))
 
-def process_scan(self, scan_area):
-    values_area = []
-    
+def process_scan(scan_area):
+    value_list = []
     for block in scan_area:
-        value = 800
-        
-        if list(block.get('color')) == self.color_list[0].cor:
-            value = self.color_list[0].valor
-        if list(block.get('color')) == self.color_list[1].cor:
-            value = self.color_list[1].valor
-        if list(block.get('color')) == self.color_list[2].cor:
-            value = self.color_list[2].valor
-        if block.get('color') == self.player.color:
-            value = 0
-        if block.get('color') == self.color_list[3].cor:
-            value = self.color_list[3].valor
-        values_area.append(value)
-    return values_area
+        block = block.get('valor')
+        value_list.append(block)
+    return value_list
 
 def scan_matrix(values_area):
     area = list(min_slice(values_area, 7))
@@ -84,18 +79,52 @@ def scan_matrix(values_area):
         '6': l7
     }
 
+    
     for i in scan:
         print(scan[i])
     print('---------')
-    ...
+    return area
 
-def to_block(x, y, width, height, color):
+def scan_map(self):
+    sc_height = self.sc.get_height() - 120
+
+    block_map = []
+    for i in range(42):
+        for j in range(42):
+            xi = j * 21
+            yi = i * 21
+        
+            color = self.sc.get_at((xi, yi))
+            block = to_block(self, xi, yi, color)
+            block_map.append((block.get('valor')))
+
+    area = list(min_slice(block_map, 42))
+
+
+def to_block(self, x, y, color):
+
+    listcolor = list(color)
+    value = 0
+    if listcolor == self.color_list[0].cor:
+        value = self.color_list[0].valor
+    
+    if listcolor == self.color_list[1].cor:
+        value = self.color_list[1].valor
+
+    if listcolor == self.color_list[2].cor:
+        value = self.color_list[2].valor
+    
+    if color == self.player.color:
+        value = 'x'
+    
+    if color == self.color_list[3].cor:
+        value = self.color_list[3].valor
+
     block_data = {
             'x': x,
             'y': y,
-            'width': width,
-            'height': height,
-            'color': color
+            'color': color,
+            'valor': value
         }
     return block_data
 
@@ -105,31 +134,15 @@ def min_slice(lst, n):
     return lst
 
 
-def move_around(self):
-    x0 = self.player.x - 63
-    y0 = self.player.y - 63
-    xmax = x0 + 126
-    ymax = y0 + 126
-
-    space_x = self.sc.get_width()
-    space_y = self.sc.get_height() - 120
-
-    print(space_x, space_y)
-
-    # print(f'ponta1 = ({x0, y0})')
-    # print(f'ponta2 = ({x0, ymax})')
-    # print(f'ponta3 = ({xmax, y0})')
-    # print(f'ponta4 = ({xmax, ymax})')
-   
-    if abs(x0 - 0) <= abs(xmax - 861):
-        print('Esquerda')
-    if abs(x0 - 0) >= abs(xmax - 861):
-        print('Direita')
-
-    if abs(y0 - 0) <= abs(ymax - 861):
-        print('Topo')
+def find_sphere(scan_map):
+    pos_i = 0
+    pos_j = 0 
+    for i in range (len(scan_map)):
+        for j in range(i):
+            if 100 == scan_map[i].get('valor'): 
+                pos_i = scan_map[i].get('x')
+                pos_j = scan_map[i].get('y')
+            break
     
-    if abs(y0 - 0) >= abs(ymax - 861):
-        print('Solo')
+    return (pos_i, pos_j) 
 
-    print(self.player.x, self.player.y)

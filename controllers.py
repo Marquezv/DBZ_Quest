@@ -20,6 +20,5 @@ def change_color(keys, color_list, select_color):
     return select_color
 
 def save(keys, sc, block_list):
-    # if keys[pygame.K_LCTRL] and keys[pygame.K_s]:
-    #     save_map(sc, block_list, 'map.csv')
-    ...
+    if keys[pygame.K_LCTRL] and keys[pygame.K_s]:
+        save_map(sc, block_list, 'map.csv')

@@ -72,14 +72,10 @@ def main():
     except ValueError:
         print("[ERRO] Numero nao encontrado")
     run()
-            
 
-def draw_text(sc, points, mode):
-    points = FONT.render(f'Points: {points}', 1, COLOR_FONT)
-    mode = FONT.render(f'Mode: {mode}', 1, COLOR_FONT)
-    sc.blit(mode, (10, 885))
-    sc.blit(points, (10, 925))
-    pygame.display.update()
+def clean():
+    rect = pygame.Rect(880, 880, 880, 120)
+    pygame.draw.rect(sc, (0, 0, 0, 0), rect)
 
 def run():
     pygame.display.set_caption('DBZ_Quest')
@@ -88,19 +84,21 @@ def run():
     ht = []
     ht_rd = []
     player = Player(sc, DRAGON_SPHERE_COLOR)
-    player.start(ht, ht_rd)
     ia = Ia(sc, player, color_list)
     while running:
         ia.update()
-        clock.tick(60)
+        clock.tick(30)
         MODE = "GAME"
         for event in pygame.event.get():                                  
             left, right, middle = pygame.mouse.get_pressed()
             keys = pygame.key.get_pressed()
+            
             if event.type == QUIT:
                 running = False
                 pygame.quit()
-
+            elif keys == keys[pygame.K_SPACE]:
+                player.start(ht, ht_rd)
+                break
             elif event.type == pygame.KEYDOWN:
                 select_color = change_color(keys, color_list, select_color)
                 player.handle_keys(keys, ht, ht_rd)
@@ -109,7 +107,13 @@ def run():
                 save(keys, sc, block_list)
             elif left and select_color != None:
                 pressed_mouse_left(sc, block_list, select_color)
-        draw_text(sc, 0, MODE)
+
+        points = FONT.render(f'Points: {player.update()}', 1, COLOR_FONT)
+        mode = FONT.render(f'Mode: {MODE}', 1, COLOR_FONT)
+        clean()
+        sc.blit(mode, (10, 885))
+        sc.blit(points, (10, 925))
+        
         pygame.display.update()
         
     

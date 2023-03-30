@@ -47,6 +47,7 @@ def open_map(sc, path_file, dragon_sphere_color):
     for block in data:
         rect = pygame.Rect(block[0], block[1], block[2], block[3])
         Block(rect, sc).select_color(block[4])
+        
     dragon_sphere(sc, data, dragon_sphere_color)
 
 def save_map(sc, block_list, path_file):

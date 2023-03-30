@@ -15,6 +15,8 @@ class Player():
         self.rect = pygame.Rect(self.x, self.y, self.height, self.width)
         self.point = 0
 
+    def update(self):
+        return self.point
     def start(self, ht, ht_rd):
         block = pygame.Rect(self.x, self.y, self.height, self.width)
         history(self.sc, block, self.color, ht)
@@ -24,7 +26,7 @@ class Player():
 
     def handle_keys(self, key, ht, ht_rd):
         history_rd(self, ht_rd)
-        
+
         if key[pygame.K_a]:
             self.x -= 21
             self.y += 0
@@ -37,11 +39,11 @@ class Player():
             self.y -= 21
             self.x  += 0
             draw_player(self, ht_rd, ht)
-        if key[pygame.K_s] and not key[pygame.K_a] and not key[pygame.K_d]:
+        if key[pygame.K_s] and not key[pygame.K_a] and not key[pygame.K_d] and not key[pygame.K_LCTRL]:
             self.y += 21
             self.x  += 0
             draw_player(self, ht_rd, ht)
-        if key[pygame.K_LCTRL] and key[pygame.K_s]:
+        if key[pygame.K_LCTRL] and key[pygame.K_e]:
             clean(self.sc, ht[1])
             history_rd(self, ht_rd)
 
@@ -126,6 +128,8 @@ def history_rd(self, ht_rd):
         if block.get('color') != COLOR_PLAYER or block_center(self, block.get('x'), block.get('y')) != self.sphere:
             rect = pygame.Rect(block.get('x'), block.get('y'), block.get('height'), block.get('width'))
             pygame.draw.rect(self.sc, block.get('color'), rect)
+    if len(ht_rd) > 49 :
+        ht_rd = ht_rd[:49]
 
 
 def radar_out_screen(self, xi, yi):
