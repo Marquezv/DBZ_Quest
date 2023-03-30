@@ -14,7 +14,7 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
 block_list = [pygame.Rect(21 * i, 21 * j, 20, 20) for i in range(PIXEL) for j in range(PIXEL)]
 
-FONT = pygame.font.SysFont("exo", 40)
+FONT = pygame.font.SysFont("sans-serif", 40)
 COLOR_FONT = (255, 255, 255)
 DRAGON_SPHERE_COLOR = (228, 108, 0, 255)
 
